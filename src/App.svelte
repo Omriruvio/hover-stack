@@ -13,11 +13,13 @@
 
 <main>
   <ul class="items">
-    {#each items as item (item)}
+    {#each items as item}
       <li class="item">
-        <button tabindex="0">
-          <img src={item.src} alt="placeholder" />
-        </button>
+        <div class="card">
+          <button tabindex="0">
+            <img src={item.src} alt="placeholder" />
+          </button>
+        </div>
       </li>
     {/each}
   </ul>
@@ -26,82 +28,76 @@
 </main>
 
 <style>
-  h2 {
-    text-align: center;
-    margin-top: 5rem;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-
-    & li {
-      padding: 0.2rem;
-    }
-  }
-
   .items {
     width: 100%;
     display: flex;
-    justify-content: center;
-    flex-direction: row;
-
-    perspective: 1000px;
-    transform-style: preserve-3d;
+    gap: 1rem;
   }
 
   .item {
-    filter: brightness(0);
-    transition: 0.15s;
-
-    & img {
-      width: 100px;
-      display: block;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
+    perspective: 1000px;
+    position: relative;
+    z-index: 0;
   }
 
   .item:hover,
   .items:not(:has(:hover)) .item:focus-within {
-    filter: brightness(1);
-    transform: translateZ(200px);
+    z-index: 1;
   }
 
-  .item:hover + *,
-  .items:not(:has(:hover)) .item:focus-within + * {
+  .card {
+    filter: brightness(0);
+    transform-style: preserve-3d;
+    transition: 0.15s;
+  }
+
+  .card img {
+    width: 100px;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .item:hover .card,
+  .items:not(:has(:hover)) .item:focus-within .card {
+    filter: brightness(1);
+    transform: translateZ(250px);
+  }
+
+  .item:hover + .item .card,
+  .items:not(:has(:hover)) .item:focus-within + .item .card {
     filter: brightness(0.5);
     transform: translateZ(150px) rotateY(40deg);
   }
 
-  .item:hover + * + *,
-  .items:not(:has(:hover)) .item:focus-within + * + * {
+  .item:hover + .item + .item .card,
+  .items:not(:has(:hover)) .item:focus-within + .item + .item .card {
     filter: brightness(0.25);
     transform: translateZ(100px) rotateY(20deg);
   }
 
-  .item:hover + * + * + *,
-  .items:not(:has(:hover)) .item:focus-within + * + * + * {
+  .item:hover + .item + .item + .item .card,
+  .items:not(:has(:hover)) .item:focus-within + .item + .item + .item .card {
     filter: brightness(0.1);
     transform: translateZ(10px);
   }
 
-  .item:has(+ *:hover),
-  .items:not(:has(:hover)) .item:has(+ *:focus-within) {
+  .item:has(+ .item:hover) .card,
+  .items:not(:has(:hover)) .item:has(+ .item:focus-within) .card {
     filter: brightness(0.5);
     transform: translateZ(150px) rotateY(-40deg);
   }
 
-  .item:has(+ * + *:hover),
-  .items:not(:has(:hover)) .item:has(+ * + *:focus-within) {
+  .item:has(+ .item + .item:hover) .card,
+  .items:not(:has(:hover)) .item:has(+ .item + .item:focus-within) .card {
     filter: brightness(0.25);
     transform: translateZ(100px) rotateY(-20deg);
   }
 
-  .item:has(+ * + * + *:hover),
-  .items:not(:has(:hover)) .item:has(+ * + * + *:focus-within) {
+  .item:has(+ .item + .item + .item:hover) .card,
+  .items:not(:has(:hover))
+    .item:has(+ .item + .item + .item:focus-within)
+    .card {
     filter: brightness(0.1);
     transform: translateZ(10px);
   }
